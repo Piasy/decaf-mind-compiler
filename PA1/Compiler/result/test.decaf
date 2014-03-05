@@ -1,0 +1,21 @@
+class Main extends X {
+	int[][] foo () {
+		return new int[][2];
+	}
+	static void main () {
+		repeat
+			a = ReadInteger();
+		until (1);
+		b = ReadLine();
+		for (b = 0; b || 0; b = b + 1)
+		{
+			a = !!1 + 2 - 3 * 4 / 5 % 6 < 7 && 8 || - a.b;
+			a = a + a * b == a;
+			a = a - - - b;
+			foo (a, b);
+			if (a != a && a == a || b >= c && b <= c)
+				return;
+			break;
+		}
+	}
+}

@@ -1,0 +1,10 @@
+/* this is a comment and it can span multiple lines
+and even /* can exist /*inside  comments */
+
+class Main {
+    static void main() {
+        string str;
+        str = "string
+        ";
+    }
+}

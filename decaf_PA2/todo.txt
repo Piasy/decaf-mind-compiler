@@ -1,0 +1,38 @@
+/decaf_PA2/src/decaf/error/BadArgCountError.java		--ok
+/decaf_PA2/src/decaf/error/BadArgTypeError.java			--ok
+/decaf_PA2/src/decaf/error/BadArrElementError.java		--ok
+/decaf_PA2/src/decaf/error/BadInheritanceError.java
+/decaf_PA2/src/decaf/error/BadLengthArgError.java		
+/decaf_PA2/src/decaf/error/BadLengthError.java
+/decaf_PA2/src/decaf/error/BadNewArrayLength.java		--ok
+/decaf_PA2/src/decaf/error/BadOverrideError.java
+/decaf_PA2/src/decaf/error/BadPrintArgError.java
+/decaf_PA2/src/decaf/error/BadReturnTypeError.java
+/decaf_PA2/src/decaf/error/BadTestExpr.java
+/decaf_PA2/src/decaf/error/BadVarTypeError.java
+/decaf_PA2/src/decaf/error/BlockCommentError.java
+/decaf_PA2/src/decaf/error/BreakOutOfLoopError.java
+/decaf_PA2/src/decaf/error/ClassNotFoundError.java
+/decaf_PA2/src/decaf/error/DecafError.java
+/decaf_PA2/src/decaf/error/DeclConflictError.java
+/decaf_PA2/src/decaf/error/DoubleConstFormatError.java
+/decaf_PA2/src/decaf/error/FieldNotAccessError.java
+/decaf_PA2/src/decaf/error/FieldNotFoundError.java
+/decaf_PA2/src/decaf/error/IncompatBinOpError.java
+/decaf_PA2/src/decaf/error/IncompatUnOpError.java
+/decaf_PA2/src/decaf/error/IntTooLargeError.java
+/decaf_PA2/src/decaf/error/MsgError.java
+/decaf_PA2/src/decaf/error/NewlineInStrError.java
+/decaf_PA2/src/decaf/error/NoMainClassError.java		--ok
+/decaf_PA2/src/decaf/error/NotArrayError.java
+/decaf_PA2/src/decaf/error/NotClassError.java
+/decaf_PA2/src/decaf/error/NotClassFieldError.java		--ok
+/decaf_PA2/src/decaf/error/NotClassMethodError.java
+/decaf_PA2/src/decaf/error/OverridingVarError.java
+/decaf_PA2/src/decaf/error/RefNonStaticError.java
+/decaf_PA2/src/decaf/error/RuntimeError.java
+/decaf_PA2/src/decaf/error/SubNotIntError.java
+/decaf_PA2/src/decaf/error/ThisInStaticFuncError.java
+/decaf_PA2/src/decaf/error/UndeclVarError.java
+/decaf_PA2/src/decaf/error/UnrecogCharError.java
+/decaf_PA2/src/decaf/error/UntermStrError.java

@@ -1,0 +1,19 @@
+GLOBAL SCOPE:
+    (1,1) -> class Math
+    (22,1) -> class Main
+    CLASS SCOPE OF 'Math':
+        (2,19) -> static function abs : double->double
+        (10,16) -> static function pow : int->int->int
+        FORMAL SCOPE OF 'abs':
+            (2,30) -> variable @a : double
+            LOCAL SCOPE:
+        FORMAL SCOPE OF 'pow':
+            (10,24) -> variable @a : int
+            (10,31) -> variable @b : int
+            LOCAL SCOPE:
+                (11,13) -> variable i : int
+                (12,13) -> variable result : int
+    CLASS SCOPE OF 'Main':
+        (23,17) -> static function main : void
+        FORMAL SCOPE OF 'main':
+            LOCAL SCOPE:

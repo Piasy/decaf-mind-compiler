@@ -1,0 +1,32 @@
+class Main {
+    int div;
+    
+    static void main() {
+		//aaaa = 1;
+    }
+    
+    static int add(int a, int b) {
+		int aaaa;
+        return a + b;
+    }
+    
+    void sub(int a, int b) {
+		int[] ss;
+		ss = new int[-1];
+        //c = a[1];
+		//d = 1;
+		int d;
+		
+		int Main;
+		class Main myMian;
+		if (a == b)
+		{
+			//int d;
+			//int Main;
+		}
+		return ;
+    }    
+	
+	int c;
+	//int d;
+}

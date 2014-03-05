@@ -1,0 +1,94 @@
+program
+    class Main X
+        func foo arrtype arrtype inttype
+            formals
+            stmtblock
+                return
+                    newarray arrtype inttype
+                        intconst 2
+        static func main voidtype
+            formals
+            stmtblock
+                repeat
+                    assign
+                        varref a
+                        readint
+                until
+                    intconst 1
+                assign
+                    varref b
+                    readline
+                for
+                    assign
+                        varref b
+                        intconst 0
+                    or
+                        varref b
+                        intconst 0
+                    assign
+                        varref b
+                        add
+                            varref b
+                            intconst 1
+                    stmtblock
+                        assign
+                            varref a
+                            or
+                                and
+                                    les
+                                        sub
+                                            add
+                                                not
+                                                    not
+                                                        intconst 1
+                                                intconst 2
+                                            mod
+                                                div
+                                                    mul
+                                                        intconst 3
+                                                        intconst 4
+                                                    intconst 5
+                                                intconst 6
+                                        intconst 7
+                                    intconst 8
+                                neg
+                                    varref b
+                                        varref a
+                        assign
+                            varref a
+                            equ
+                                add
+                                    varref a
+                                    mul
+                                        varref a
+                                        varref b
+                                varref a
+                        assign
+                            varref a
+                            sub
+                                varref a
+                                neg
+                                    neg
+                                        varref b
+                        call foo
+                            <empty>
+                            varref a
+                            varref b
+                        if
+                            or
+                                and
+                                    neq
+                                        varref a
+                                        varref a
+                                    equ
+                                        varref a
+                                        varref a
+                                and
+                                    geq
+                                        varref b
+                                        varref c
+                                    leq
+                                        varref b
+                                        varref c
+                            return
+                        break

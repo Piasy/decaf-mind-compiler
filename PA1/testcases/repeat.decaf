@@ -1,0 +1,14 @@
+class Main {
+    int i;
+
+    static void main() {
+        i = 1;
+		int j;
+		j = 1;
+        repeat
+		{
+			i = i + 1;
+		}
+		until (i < j)
+    }
+}

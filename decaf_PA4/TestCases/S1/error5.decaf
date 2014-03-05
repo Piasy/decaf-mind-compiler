@@ -1,0 +1,7 @@
+class Main {
+    static void main() {
+        string s;
+        double d;
+        d = 12.12;
+        d = 12.1E+2;
+        s = "str

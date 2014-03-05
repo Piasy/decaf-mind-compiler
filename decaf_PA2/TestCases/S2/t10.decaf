@@ -1,0 +1,27 @@
+class Math {
+    static double abs(double a) {
+        if (a >= 1.2) {
+            return a;
+        } else {
+            return -a;
+        }
+    }
+    
+    static int pow(int a, int b) {
+        int i;
+        int result;
+        result = 1;
+        for (i = 0; i < b; i = i + 1) {
+            result = result * a;
+        }
+        return result;
+    }
+    
+}
+
+class Main {   
+    static void main() {
+        Print(Math.abs(-12.0), "\n");
+        Print(Math.pow(2, 3), "\n");
+    }
+}

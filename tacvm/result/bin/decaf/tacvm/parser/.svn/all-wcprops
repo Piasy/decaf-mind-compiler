@@ -1,0 +1,71 @@
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/svn/decaf/!svn/ver/54/tacvm/src/decaf/tacvm/parser
+END
+Entry.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/decaf/!svn/ver/1/tacvm/src/decaf/tacvm/parser/Entry.java
+END
+SemValue.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/decaf/!svn/ver/48/tacvm/src/decaf/tacvm/parser/SemValue.java
+END
+Parser.y
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/decaf/!svn/ver/48/tacvm/src/decaf/tacvm/parser/Parser.y
+END
+Temp.java
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/decaf/!svn/ver/1/tacvm/src/decaf/tacvm/parser/Temp.java
+END
+BaseParser.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/decaf/!svn/ver/54/tacvm/src/decaf/tacvm/parser/BaseParser.java
+END
+Tac.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/decaf/!svn/ver/1/tacvm/src/decaf/tacvm/parser/Tac.java
+END
+Lexer.l
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/decaf/!svn/ver/48/tacvm/src/decaf/tacvm/parser/Lexer.l
+END
+BaseLexer.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/decaf/!svn/ver/1/tacvm/src/decaf/tacvm/parser/BaseLexer.java
+END
+Errs.java
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/decaf/!svn/ver/10/tacvm/src/decaf/tacvm/parser/Errs.java
+END
+ParserHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/decaf/!svn/ver/1/tacvm/src/decaf/tacvm/parser/ParserHelper.java
+END
+VTable.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/decaf/!svn/ver/48/tacvm/src/decaf/tacvm/parser/VTable.java
+END

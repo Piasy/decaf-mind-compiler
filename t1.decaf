@@ -1,0 +1,47 @@
+class Main {
+	int [] a;
+	int bbb;
+    static void main() 
+	{
+		class Main mymain;
+		mymain = new Main();
+		Print(mymain.test(), "\n");
+		//instanceof(mymain);
+		//mymain.a[9] = mymain.test();
+		//Print(mymain.a[9], "\n");
+    }
+	
+	int test()
+	{
+		int a;
+		a = 100;
+		Print(a, "\n");
+		this.a = new int [10];
+		int i;
+		for (i = 0; i < 10; i = i + 1)
+		{
+			Print("before assign: this.a[i] = ", this.a[i]);
+			this.a[i] = i;
+			Print(", after assign: this.a[i] = ", this.a[i], "\n");
+		}
+		
+		for (i = 0; i < 10; i = i + 1)
+		{
+			Print("confirm: this.a[i] = ", this.a[i], "\n");
+		}
+		
+		//Print(a[1]);
+		return a;
+	}
+}
+
+class AAA extends Main
+{
+	int test()
+	{
+		int a;
+		a = 100;
+		return a;
+	}
+}
+

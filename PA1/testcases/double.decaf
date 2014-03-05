@@ -1,0 +1,19 @@
+class Main {
+    int i;
+
+    static void main() {
+        i = 1;
+		int j;
+		j = -12.1E+1;
+        repeat
+		{
+			i = i + 1;
+			j = j + 1.0e+1;
+		}
+		until (i > 10)
+    }
+}
+
+//dsfsdfd
+/*ddwcwdcw /* 
+dsscdsc*/
