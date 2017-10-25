@@ -46,16 +46,12 @@ public class Translater {
 	public void printTo(PrintWriter pw) {
 		for (VTable vt : vtables) {
 			pw.println("VTABLE(" + vt.name + ") {");
-			
-			////////////////////////////////////////////////////////////////////////////////////////
-//			if (vt.parent != null) {
-//				pw.println("    " + vt.parent.name);
-//			} else {
-//				pw.println("    <empty>");
-//			}
+			if (vt.parent != null) {
+				pw.println("    " + vt.parent.name);
+			} else {
+				pw.println("    <empty>");
+			}
 			pw.println("    " + vt.className);
-			////////////////////////////////////////////////////////////////////////////////////////
-			
 			for (Label l : vt.entries) {
 				pw.println("    " + l.name + ";");
 			}
@@ -132,11 +128,7 @@ public class Translater {
 			return;
 		}
 		VTable vtable = new VTable();
-		
-		////////////////////////////////////////////////////////////////////////////////////////
 		vtable.className = c.getName();
-		////////////////////////////////////////////////////////////////////////////////////////
-		
 		vtable.name = "_" + c.getName();
 		vtable.entries = new Label[c.getNumNonStaticFunc()];
 		fillVTableEntries(vtable, c.getAssociatedScope());
@@ -436,23 +428,21 @@ public class Translater {
 		endFunc();
 	}
 
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-//	public Temp genInstanceof(Temp instance, Class c) {
-//		Temp dst = Temp.createTempI4();
-//		Label loop = Label.createLabel();
-//		Label exit = Label.createLabel();
-//		Temp targetVp = genLoadVTable(c.getVtable());
-//		Temp vp = genLoad(instance, 0);
-//		genMark(loop);
-//		append(Tac.genEqu(dst, targetVp, vp));
-//		genBnez(dst, exit);
-//		append(Tac.genLoad(vp, vp, Temp.createConstTemp(0)));
-//		genBnez(vp, loop);
-//		append(Tac.genLoadImm4(dst, Temp.createConstTemp(0)));
-//		genMark(exit);
-//		return dst;
-//	}
-	////////////////////////////////////////////////////////////////////////////////////////////////////
+	public Temp genInstanceof(Temp instance, Class c) {
+		Temp dst = Temp.createTempI4();
+		Label loop = Label.createLabel();
+		Label exit = Label.createLabel();
+		Temp targetVp = genLoadVTable(c.getVtable());
+		Temp vp = genLoad(instance, 0);
+		genMark(loop);
+		append(Tac.genEqu(dst, targetVp, vp));
+		genBnez(dst, exit);
+		append(Tac.genLoad(vp, vp, Temp.createConstTemp(0)));
+		genBnez(vp, loop);
+		append(Tac.genLoadImm4(dst, Temp.createConstTemp(0)));
+		genMark(exit);
+		return dst;
+	}
 
 	public void genClassCast(Temp val, Class c) {
 		Label loop = Label.createLabel();

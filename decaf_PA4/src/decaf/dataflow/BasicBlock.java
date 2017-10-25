@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.HashSet;
 
 import decaf.machdesc.Asm;
 import decaf.machdesc.Register;
@@ -49,16 +48,6 @@ public class BasicBlock {
 	public Set<Temp> saves;
 
 	private List<Asm> asms;
-	
-	///////////////////////////////////////////////////////////////////////////////
-	public Set<Temp> reachConstGen;
-
-	public Set<Temp> reachConstIn;
-
-	public Set<Temp> reachConstOut;
-
-	public Set<Temp> reachConstKill;
-	///////////////////////////////////////////////////////////////////////////////
 
 	public BasicBlock() {
 		def = new TreeSet<Temp>(Temp.ID_COMPARATOR);
@@ -70,156 +59,11 @@ public class BasicBlock {
 	}
 
 	public void computeDefAndLiveUse() {
-		for (Tac tac = tacList; tac != null; tac = tac.next) {
-			switch (tac.opc) {
-			case ADD:
-			case SUB:
-			case MUL:
-			case DIV:
-			case MOD:
-			case LAND:
-			case LOR:
-			case GTR:
-			case GEQ:
-			case EQU:
-			case NEQ:
-			case LEQ:
-			case LES:
-				/* use op1 and op2, def op0 */
-				if (tac.op1.lastVisitedBB != bbNum) {
-					liveUse.add (tac.op1);
-					tac.op1.lastVisitedBB = bbNum;
-				}
-				if (tac.op2.lastVisitedBB != bbNum) {
-					liveUse.add (tac.op2);
-					tac.op2.lastVisitedBB = bbNum;
-				}
-				if (tac.op0.lastVisitedBB != bbNum) {
-					def.add (tac.op0);
-					tac.op0.lastVisitedBB = bbNum;
-				}
-				break;
-			case NEG:
-			case LNOT:
-			case ASSIGN:
-			case INDIRECT_CALL:
-			case LOAD:
-				/* use op1, def op0 */
-				if (tac.op1.lastVisitedBB != bbNum) {
-					liveUse.add (tac.op1);
-					tac.op1.lastVisitedBB = bbNum;
-				}
-				if (tac.op0 != null && tac.op0.lastVisitedBB != bbNum) {  // in INDIRECT_CALL with return type VOID,
-					// tac.op0 is null
-					def.add (tac.op0);
-					tac.op0.lastVisitedBB = bbNum;
-				}
-				break;
-			case LOAD_VTBL:
-			case DIRECT_CALL:
-			case RETURN:
-			case LOAD_STR_CONST:
-			case LOAD_IMM4:
-				/* def op0 */
-				if (tac.op0 != null && tac.op0.lastVisitedBB != bbNum) {  // in DIRECT_CALL with return type VOID,
-					// tac.op0 is null
-					def.add (tac.op0);
-					tac.op0.lastVisitedBB = bbNum;
-				}
-				break;
-			case STORE:
-				/* use op0 and op1*/
-				if (tac.op0.lastVisitedBB != bbNum) {
-					liveUse.add (tac.op0);
-					tac.op0.lastVisitedBB = bbNum;
-				}
-				if (tac.op1.lastVisitedBB != bbNum) {
-					liveUse.add (tac.op1);
-					tac.op1.lastVisitedBB = bbNum;
-				}
-				break;
-			case PARM:
-				/* use op0 */
-				if (tac.op0.lastVisitedBB != bbNum) {
-					liveUse.add (tac.op0);
-					tac.op0.lastVisitedBB = bbNum;
-				}
-				break;
-			default:
-				/* BRANCH MEMO MARK PARM*/
-				break;
-			}
-		}
-		if (var != null && var.lastVisitedBB != bbNum) {
-			liveUse.add (var);
-			var.lastVisitedBB = bbNum;
-		}
-		liveIn.addAll (liveUse);
+		// TODO
 	}
 
 	public void analyzeLiveness() {
-		if (tacList == null)
-			return;
-		Tac tac = tacList;
-		for (; tac.next != null; tac = tac.next); 
-
-		tac.liveOut = new HashSet<Temp> (liveOut);
-		if (var != null)
-			tac.liveOut.add (var);
-		for (; tac != tacList; tac = tac.prev) {
-			tac.prev.liveOut = new HashSet<Temp> (tac.liveOut);
-			switch (tac.opc) {
-			case ADD:
-			case SUB:
-			case MUL:
-			case DIV:
-			case MOD:
-			case LAND:
-			case LOR:
-			case GTR:
-			case GEQ:
-			case EQU:
-			case NEQ:
-			case LEQ:
-			case LES:
-				/* use op1 and op2, def op0 */
-				tac.prev.liveOut.remove (tac.op0);
-				tac.prev.liveOut.add (tac.op1);
-				tac.prev.liveOut.add (tac.op2);
-				break;
-			case NEG:
-			case LNOT:
-			case ASSIGN:
-			case INDIRECT_CALL:
-			case LOAD:
-				/* use op1, def op0 */
-				tac.prev.liveOut.remove (tac.op0);
-				tac.prev.liveOut.add (tac.op1);
-				break;
-			case LOAD_VTBL:
-			case DIRECT_CALL:
-			case RETURN:
-			case LOAD_STR_CONST:
-			case LOAD_IMM4:
-				/* def op0 */
-				tac.prev.liveOut.remove (tac.op0);
-				break;
-			case STORE:
-				/* use op0 and op1*/
-				tac.prev.liveOut.add (tac.op0);
-				tac.prev.liveOut.add (tac.op1);
-				break;
-			case BEQZ:
-			case BNEZ:
-			case PARM:
-				/* use op0 */
-				tac.prev.liveOut.add (tac.op0);
-				break;
-			default:
-				/* BRANCH MEMO MARK PARM*/
-				break;
-			}
-		}
+		// TODO:
 	}
 
 	public void printTo(PrintWriter pw) {

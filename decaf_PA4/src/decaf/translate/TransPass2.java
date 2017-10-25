@@ -1,6 +1,3 @@
-// 注: 代码中的 TODO 等注释只是一个提示。需要在这些地方添加/修改代码就来完成本次作业，
-// 你也可以根据自己的需要在其他位置修改/添加代码。我们鼓励不同的实现方式。
-
 package decaf.translate;
 
 import java.util.Stack;
@@ -81,14 +78,12 @@ public class TransPass2 extends Tree.Visitor {
 		case Tree.MOD:
 			expr.val = tr.genMod(expr.left.val, expr.right.val);
 			break;
-		// NOTE: Decaf中的逻辑运算符&&和||不短路。如果要短路，对Tree.AND和Tree.OR的处理会复杂一些。
 		case Tree.AND:
 			expr.val = tr.genLAnd(expr.left.val, expr.right.val);
 			break;
 		case Tree.OR:
 			expr.val = tr.genLOr(expr.left.val, expr.right.val);
 			break;
-		// NOTE-END
 		case Tree.LT:
 			expr.val = tr.genLes(expr.left.val, expr.right.val);
 			break;
@@ -107,9 +102,8 @@ public class TransPass2 extends Tree.Visitor {
 			break;
 		}
 	}
-	
+
 	private void genEquNeq(Tree.Binary expr) {
-		//与 或 已经无所谓了，因为不兼容在PA2已经报错了
 		if (expr.left.type.equal(BaseType.STRING)
 				|| expr.right.type.equal(BaseType.STRING)) {
 			tr.genParm(expr.left.val);
@@ -224,21 +218,14 @@ public class TransPass2 extends Tree.Visitor {
 	@Override
 	public void visitPrint(Tree.Print printStmt) {
 		for (Tree.Expr r : printStmt.exprs) {
-			// TODO
-			// Print支持三种类型的参数: bool/int/string，分别处理
 			r.accept(this);
 			tr.genParm(r.val);
-			if (r.type.equal(BaseType.STRING))
-			{
-				tr.genDirectCall(Intrinsic.PRINT_STRING.label, BaseType.VOID);
-			}
-			else if (r.type.equal(BaseType.INT))
-			{
-				tr.genDirectCall(Intrinsic.PRINT_INT.label, BaseType.VOID);
-			}
-			else if (r.type.equal(BaseType.BOOL)) 
-			{
-				tr.genDirectCall(Intrinsic.PRINT_BOOL.label, BaseType.VOID);
+			if (r.type.equal(BaseType.BOOL)) {
+				tr.genIntrinsicCall(Intrinsic.PRINT_BOOL);
+			} else if (r.type.equal(BaseType.INT)) {
+				tr.genIntrinsicCall(Intrinsic.PRINT_INT);
+			} else if (r.type.equal(BaseType.STRING)) {
+				tr.genIntrinsicCall(Intrinsic.PRINT_STRING);
 			}
 		}
 	}
@@ -271,6 +258,11 @@ public class TransPass2 extends Tree.Visitor {
 		}
 	}
 	
+	@Override
+	public void visitBreak(Tree.Break breakStmt) {
+		tr.genBranch(loopExits.peek());
+	}
+
 	@Override
 	public void visitCallExpr(Tree.CallExpr callExpr) {
 		if (callExpr.isArrayLength) {
@@ -306,63 +298,29 @@ public class TransPass2 extends Tree.Visitor {
 
 	@Override
 	public void visitForLoop(Tree.ForLoop forLoop) {
-		// TODO: 参考visitWhileLoop
-		if (forLoop.init != null)
+		if (forLoop.init != null) {
 			forLoop.init.accept(this);
-		
+		}
+		Label cond = Label.createLabel();
 		Label loop = Label.createLabel();
+		tr.genBranch(cond);
 		tr.genMark(loop);
-		
+		if (forLoop.update != null) {
+			forLoop.update.accept(this);
+		}
+		tr.genMark(cond);
 		forLoop.condition.accept(this);
-		
 		Label exit = Label.createLabel();
 		tr.genBeqz(forLoop.condition.val, exit);
-		
 		loopExits.push(exit);
-		if (forLoop.loopBody != null) 
+		if (forLoop.loopBody != null) {
 			forLoop.loopBody.accept(this);
-		
-		if (forLoop.update != null)
-			forLoop.update.accept(this);
-		
+		}
 		tr.genBranch(loop);
 		loopExits.pop();
 		tr.genMark(exit);
 	}
-	
-	@Override
-	public void visitRepeatLoop(Tree.RepeatLoop repeatLoop) 
-	{
-		//TODO visitRepeatLoop
-		Label loop = Label.createLabel();
-		tr.genMark(loop);
-		Label exit = Label.createLabel();
-		loopExits.push(exit);
-		
-		if (repeatLoop.loopBody != null)
-			repeatLoop.loopBody.accept(this);
-		
-		repeatLoop.condition.accept(this);
-		
-		tr.genBeqz(repeatLoop.condition.val, loop);	//or exit?
-		
-		tr.genBranch(exit);
-		
-		//tr.genBeqz(repeatLoop.condition.val, exit);
-		//tr.genBranch(loop);
-		
-		loopExits.pop();
-		tr.genMark(exit); 
-	}
 
-	@Override
-	public void visitBreak(Tree.Break breakStmt)
-	{
-		//TODO visitBreak
-		if (!loopExits.empty())
-			tr.genBranch(loopExits.lastElement());
-	}
-	
 	@Override
 	public void visitIf(Tree.If ifStmt) {
 		ifStmt.condition.accept(this);
@@ -413,25 +371,19 @@ public class TransPass2 extends Tree.Visitor {
 		tr.genMark(exit);
 	}
 
-	/////////////////////////////////////////////////////////////////////////////////////////////
-//	@Override
-//	public void visitTypeTest(Tree.TypeTest typeTest) {
-//		typeTest.instance.accept(this);
-//		typeTest.val = tr.genInstanceof(typeTest.instance.val,
-//				typeTest.symbol);
-//	}
-	/////////////////////////////////////////////////////////////////////////////////////////////
-	
+	@Override
+	public void visitTypeTest(Tree.TypeTest typeTest) {
+		typeTest.instance.accept(this);
+		typeTest.val = tr.genInstanceof(typeTest.instance.val,
+				typeTest.symbol);
+	}
+
 	@Override
 	public void visitTypeCast(Tree.TypeCast typeCast) {
 		typeCast.expr.accept(this);
-		// TODO 判断类型是否兼容，生成转换代码
+		if (!typeCast.expr.type.compatible(typeCast.symbol.getType())) {
+			tr.genClassCast(typeCast.expr.val, typeCast.symbol);
+		}
 		typeCast.val = typeCast.expr.val;
-		//if (typeCast.expr.type.compatible(typeCast.symbol.getType()))
-//		tr.createVTable(typeCast.symbol);	
-		//tr.genClassCast(typeCast.expr.val, typeCast.symbol);
-			//typeCast.val
-		//else
-			
 	}
 }

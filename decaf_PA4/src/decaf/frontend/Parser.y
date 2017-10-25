@@ -24,17 +24,16 @@ import java.util.*;
 %Jnodebug
 %Jnoconstruct
 
-%token VOID   BOOL  INT   STRING  CLASS DOUBLE
+%token VOID   BOOL  INT   STRING  CLASS 
 %token NULL   EXTENDS     THIS     WHILE   FOR   
 %token IF     ELSE        RETURN   BREAK   NEW
 %token PRINT  READ_INTEGER         READ_LINE
 %token LITERAL
-%token IDENTIFIER	  AND    OR    STATIC	REPEAT	UNTIL
+%token IDENTIFIER	  AND    OR    STATIC  INSTANCEOF
 %token LESS_EQUAL   GREATER_EQUAL  EQUAL   NOT_EQUAL
 %token '+'  '-'  '*'  '/'  '%'  '='  '>'  '<'  '.'
 %token ','  ';'  '!'  '('  ')'  '['  ']'  '{'  '}'
 
-%left '='
 %left OR
 %left AND 
 %nonassoc EQUAL NOT_EQUAL
@@ -47,7 +46,7 @@ import java.util.*;
 %nonassoc ELSE
 
 %start Program
-// 请在如下部分根据decaf语言规范EBNF补充（大部分已实现，注意对照），注意新特性的添加
+
 %%
 Program			:	ClassList
 					{
@@ -55,9 +54,6 @@ Program			:	ClassList
 					}
 				;
 
-//下面的情形一相当是递归的中间层，类似于下面的动作在递归调用之后，因此下面的动作执行时，最后一层已经执行了，所以$$。clist已经new出来了。
-//而情况二则相当于最底层，因此需要先将$$.clist new出来。
-//所谓自底向上
 ClassList       :	ClassList ClassDef
 					{
 						$$.clist.add($2.cdef);
@@ -82,10 +78,6 @@ Type            :	INT
 					{
 						$$.type = new Tree.TypeIdent(Tree.INT, $1.loc);
 					}
-				|	DOUBLE
-					{
-						$$.type = new Tree.TypeIdent(Tree.DOUBLE, $1.loc);
-					}	
                 |	VOID
                 	{
                 		$$.type = new Tree.TypeIdent(Tree.VOID, $1.loc);
@@ -198,7 +190,6 @@ Stmt		    :	VariableDef
                 	}
                 |	IfStmt
                 |	WhileStmt
-                |	RepeatStmt
                 |	ForStmt
                 |	ReturnStmt ';'
                 |	PrintStmt ';'
@@ -339,6 +330,10 @@ Expr            :	LValue
                 	{
                 		$$.expr = new Tree.NewArray($2.type, $4.expr, $1.loc);
                 	}
+                |	INSTANCEOF '(' Expr ',' IDENTIFIER ')'
+                	{
+                		$$.expr = new Tree.TypeTest($3.expr, $5.ident, $1.loc);
+                	}
                 |	'(' CLASS IDENTIFIER ')' Expr
                 	{
                 		$$.expr = new Tree.TypeCast($3.ident, $5.expr, $5.loc);
@@ -424,11 +419,6 @@ PrintStmt       :	PRINT '(' ExprList ')'
 					}
                 ;
 
-RepeatStmt		:	REPEAT Stmt UNTIL '(' Expr ')'
-					{
-						$$.stmt = new Tree.RepeatLoop($5.expr, $2.stmt, $1.loc);
-					}
-				;  			          
 %%
     
 	/**

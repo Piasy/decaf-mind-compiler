@@ -12,17 +12,13 @@ public class BaseType extends Type {
 	
 	public static final BaseType BOOL = new BaseType("bool");
 
-	public static final BaseType NULL = new BaseType("null"); 
+	public static final BaseType NULL = new BaseType("null");
 
 	public static final BaseType ERROR = new BaseType("Error");
 	
 	public static final BaseType STRING = new BaseType("string");
 	
 	public static final BaseType VOID = new BaseType("void");
-	
-	////////////////////////////////////////////////////////////////////////////////////////
-	public static final BaseType DOUBLE = new BaseType("double");
-	////////////////////////////////////////////////////////////////////////////////////////
 
 	@Override
 	public boolean isBaseType() {

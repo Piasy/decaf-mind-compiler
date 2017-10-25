@@ -308,15 +308,6 @@ public abstract class Tree {
     public Location loc;
     public Type type;
     public int tag;
-    
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
-     * Tag for repeat until loop
-     * */
-    public static final int REPEAT_UNTIL_LOOP = PRINT + 1;
-    public static final int DOUBLE = STRING + 1;
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
 
     /**
      * Initialize tree with given tag.
@@ -552,51 +543,6 @@ public abstract class Tree {
     	}
    }
 
-    
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**
-     * A repeat until loop
-     * */
-    public static class RepeatLoop extends Tree
-    {
-    	public Expr condition;
-    	public Tree loopBody;
-    	
-		public RepeatLoop(Expr condition, Tree loopBody, Location loc)
-		{
-			super(REPEAT_UNTIL_LOOP, loc);
-			this.condition = condition;
-			this.loopBody = loopBody;
-		}
-		
-		@Override
-        public void accept(Visitor v) {
-            v.visitRepeatLoop(this);
-        }
-
-		@Override
-		public void printTo(IndentPrintWriter pw)
-		{
-			pw.println("repeatLoop");
-    		pw.incIndent();
-    		if (loopBody != null) {
-    			loopBody.printTo(pw);
-    		}
-    		//pw.decIndent();
-    		//pw.println("until");
-    		//pw.incIndent();
-    		condition.printTo(pw);
-    		pw.decIndent();
-		}
-    	
-    }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    
-    
-    
-    
-    
     /**
       * A for loop.
       */
@@ -786,7 +732,7 @@ public abstract class Tree {
     public abstract static class Expr extends Tree {
 
     	public Type type;
-		public Temp val;
+    	public Temp val;
     	public boolean isClass;
     	public boolean usedForRef;
     	
@@ -1164,37 +1110,36 @@ public abstract class Tree {
     	}
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////
-//    /**
-//      * instanceof expression
-//      */
-//    public static class TypeTest extends Expr {
-//    	
-//    	public Expr instance;
-//    	public String className;
-//    	public Class symbol;
-//
-//        public TypeTest(Expr instance, String className, Location loc) {
-//            super(TYPETEST, loc);
-//    		this.instance = instance;
-//    		this.className = className;
-//        }
-//
-//    	@Override
-//        public void accept(Visitor v) {
-//            v.visitTypeTest(this);
-//        }
-//
-//    	@Override
-//    	public void printTo(IndentPrintWriter pw) {
-//    		pw.println("instanceof");
-//    		pw.incIndent();
-//    		instance.printTo(pw);
-//    		pw.println(className);
-//    		pw.decIndent();
-//    	}
-//    }
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+      * instanceof expression
+      */
+    public static class TypeTest extends Expr {
+    	
+    	public Expr instance;
+    	public String className;
+    	public Class symbol;
+
+        public TypeTest(Expr instance, String className, Location loc) {
+            super(TYPETEST, loc);
+    		this.instance = instance;
+    		this.className = className;
+        }
+
+    	@Override
+        public void accept(Visitor v) {
+            v.visitTypeTest(this);
+        }
+
+    	@Override
+    	public void printTo(IndentPrintWriter pw) {
+    		pw.println("instanceof");
+    		pw.incIndent();
+    		instance.printTo(pw);
+    		pw.println(className);
+    		pw.decIndent();
+    	}
+    }
+
     /**
       * An array selection
       */
@@ -1282,9 +1227,6 @@ public abstract class Tree {
     		case INT:
     			pw.println("intconst " + value);
     			break;
-    		case DOUBLE:
-    			pw.println("doubleconst " + value);
-    			break;
     		case BOOL:
     			pw.println("boolconst " + value);
     			break;
@@ -1349,9 +1291,6 @@ public abstract class Tree {
     			break;
     		case VOID:
     			pw.print("voidtype");
-    			break;
-    		case DOUBLE:
-    			pw.print("doubletype");
     			break;
     		default:
     			pw.print("stringtype");
@@ -1439,14 +1378,6 @@ public abstract class Tree {
         public void visitWhileLoop(WhileLoop that) {
             visitTree(that);
         }
-        
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        public void visitRepeatLoop(RepeatLoop that)
-		{
-			visitTree(that);
-		}
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        
 
         public void visitForLoop(ForLoop that) {
             visitTree(that);
@@ -1520,11 +1451,9 @@ public abstract class Tree {
             visitTree(that);
         }
 
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-//        public void visitTypeTest(TypeTest that) {
-//            visitTree(that);
-//        }
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public void visitTypeTest(TypeTest that) {
+            visitTree(that);
+        }
 
         public void visitIndexed(Indexed that) {
             visitTree(that);

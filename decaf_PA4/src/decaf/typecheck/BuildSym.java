@@ -33,7 +33,7 @@ public class BuildSym extends Tree.Visitor {
 	}
 
 	public BuildSym(ScopeStack table) {
-		this.table = table;  
+		this.table = table;
 	}
 
 	public static void buildSymbol(Tree.TopLevel tree) {
@@ -167,11 +167,6 @@ public class BuildSym extends Tree.Visitor {
 		case Tree.BOOL:
 			type.type = BaseType.BOOL;
 			break;
-//////////////////////////////////////////////////////////////////////////////////////////////
-		case Tree.DOUBLE:
-		type.type = BaseType.DOUBLE;
-		break;
-//////////////////////////////////////////////////////////////////////////////////////////////
 		default:
 			type.type = BaseType.STRING;
 		}
@@ -235,15 +230,6 @@ public class BuildSym extends Tree.Visitor {
 	public void visitWhileLoop(Tree.WhileLoop whileLoop) {
 		if (whileLoop.loopBody != null) {
 			whileLoop.loopBody.accept(this);
-		}
-	}
-	
-	@Override
-	public void visitRepeatLoop(Tree.RepeatLoop repeatLoop) {
-		// TODO
-		// repeat循环。参考visitWhileLoop，自行修改Tree，
-		if (repeatLoop.loopBody != null) {
-			repeatLoop.loopBody.accept(this);
 		}
 	}
 

@@ -7,7 +7,6 @@ import java.util.Stack;
 import decaf.Driver;
 import decaf.Location;
 import decaf.tree.Tree;
-import decaf.tree.Tree.Expr;
 import decaf.error.BadArgCountError;
 import decaf.error.BadArgTypeError;
 import decaf.error.BadArrElementError;
@@ -17,7 +16,6 @@ import decaf.error.BadNewArrayLength;
 import decaf.error.BadPrintArgError;
 import decaf.error.BadReturnTypeError;
 import decaf.error.BadTestExpr;
-import decaf.error.BlockCommentError;
 import decaf.error.BreakOutOfLoopError;
 import decaf.error.ClassNotFoundError;
 import decaf.error.DecafError;
@@ -71,19 +69,14 @@ public class TypeCheck extends Tree.Visitor {
 	public void visitUnary(Tree.Unary expr) {
 		expr.expr.accept(this);
 		if(expr.tag == Tree.NEG){
-//////////////////////////////////////////////////////////////////////////////////////////////			
 			if (expr.expr.type.equal(BaseType.ERROR)
-					|| expr.expr.type.equal(BaseType.INT) || expr.expr.type.equal(BaseType.DOUBLE)) 
-			{
+					|| expr.expr.type.equal(BaseType.INT)) {
 				expr.type = expr.expr.type;
-			}
-			else 
-			{
+			} else {
 				issueError(new IncompatUnOpError(expr.getLocation(), "-",
 						expr.expr.type.toString()));
 				expr.type = BaseType.ERROR;
 			}
-//////////////////////////////////////////////////////////////////////////////////////////////
 		}
 		else{
 			if (!(expr.expr.type.equal(BaseType.BOOL) || expr.expr.type
@@ -107,10 +100,6 @@ public class TypeCheck extends Tree.Visitor {
 		case Tree.STRING:
 			literal.type = BaseType.STRING;
 			break;
-		////////////////////////////////////////////////////////////////////////////////////////
-		case Tree.DOUBLE:
-			literal.type = BaseType.DOUBLE;
-		////////////////////////////////////////////////////////////////////////////////////////
 		}
 	}
 
@@ -299,23 +288,21 @@ public class TypeCheck extends Tree.Visitor {
 		}
 	}
 
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////
-//	@Override
-//	public void visitTypeTest(Tree.TypeTest instanceofExpr) {
-//		instanceofExpr.instance.accept(this);
-//		if (!instanceofExpr.instance.type.isClassType()) {
-//			issueError(new NotClassError(instanceofExpr.instance.type
-//					.toString(), instanceofExpr.getLocation()));
-//		}
-//		Class c = table.lookupClass(instanceofExpr.className);
-//		instanceofExpr.symbol = c;
-//		instanceofExpr.type = BaseType.BOOL;
-//		if (c == null) {
-//			issueError(new ClassNotFoundError(instanceofExpr.getLocation(),
-//					instanceofExpr.className));
-//		}
-//	}
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////
+	@Override
+	public void visitTypeTest(Tree.TypeTest instanceofExpr) {
+		instanceofExpr.instance.accept(this);
+		if (!instanceofExpr.instance.type.isClassType()) {
+			issueError(new NotClassError(instanceofExpr.instance.type
+					.toString(), instanceofExpr.getLocation()));
+		}
+		Class c = table.lookupClass(instanceofExpr.className);
+		instanceofExpr.symbol = c;
+		instanceofExpr.type = BaseType.BOOL;
+		if (c == null) {
+			issueError(new ClassNotFoundError(instanceofExpr.getLocation(),
+					instanceofExpr.className));
+		}
+	}
 
 	@Override
 	public void visitTypeCast(Tree.TypeCast cast) {
@@ -331,13 +318,7 @@ public class TypeCheck extends Tree.Visitor {
 					cast.className));
 			cast.type = BaseType.ERROR;
 		} else {
-			if (cast.expr.type.compatible(cast.symbol.getType()))
-				cast.type = c.getType();
-			else
-			{
-				issueError(new BlockCommentError(cast.getLocation()));
-				cast.type = BaseType.ERROR;
-			}
+			cast.type = c.getType();
 		}
 	}
 
@@ -373,9 +354,9 @@ public class TypeCheck extends Tree.Visitor {
 					if (ident.usedForRef) {
 						ident.isClass = true;
 					} else {
-//						issueError(new UndeclVarError(ident.getLocation(),
-//								ident.name));
-//						ident.type = BaseType.ERROR;
+						issueError(new UndeclVarError(ident.getLocation(),
+								ident.name));
+						ident.type = BaseType.ERROR;
 					}
 
 				}
@@ -401,10 +382,6 @@ public class TypeCheck extends Tree.Visitor {
 								.lookForScope(Scope.Kind.CLASS)).getOwner()
 								.getType();
 						ident.type = v.getType();
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-						//所有的成员变量都不会是public的，所以，一旦用owner.var方式访问，必须在该类（及子类）的内部，即this和owner是
-						//兼容的，否则就报告访问权限错误
-////////////////////////////////////////////////////////////////////////////////////////////////////////
 						if (!thisType.compatible(ident.owner.type)) {
 							issueError(new FieldNotAccessError(ident
 									.getLocation(), ident.name,
@@ -426,7 +403,7 @@ public class TypeCheck extends Tree.Visitor {
 	@Override
 	public void visitClassDef(Tree.ClassDef classDef) {
 		table.open(classDef.symbol.getAssociatedScope());
-		for (Tree f : classDef.fields) {  
+		for (Tree f : classDef.fields) {
 			f.accept(this);
 		}
 		table.close();
@@ -473,13 +450,11 @@ public class TypeCheck extends Tree.Visitor {
 
 	@Override
 	public void visitBreak(Tree.Break breakStmt) {
-		//TO-DO
-		if (breaks.empty()) 
-		{
+		if (breaks.empty()) {
 			issueError(new BreakOutOfLoopError(breakStmt.getLocation()));
 		}
 	}
-	
+
 	@Override
 	public void visitForLoop(Tree.ForLoop forLoop) {
 		if (forLoop.init != null) {
@@ -492,19 +467,6 @@ public class TypeCheck extends Tree.Visitor {
 		breaks.add(forLoop);
 		if (forLoop.loopBody != null) {
 			forLoop.loopBody.accept(this);
-		}
-		breaks.pop();
-	}
-
-	@Override
-	public void visitRepeatLoop(Tree.RepeatLoop repeatLoop) {
-		// TO-DO
-		// repeat循环。参考visitWhileLoop，自行修改Tree，
-		checkTestExpr(repeatLoop.condition);
-		breaks.add(repeatLoop);
-		if (repeatLoop.loopBody != null) 
-		{
-			repeatLoop.loopBody.accept(this);
 		}
 		breaks.pop();
 	}
@@ -526,15 +488,12 @@ public class TypeCheck extends Tree.Visitor {
 		for (Tree.Expr e : printStmt.exprs) {
 			e.accept(this);
 			i++;
-/////////////////////////////////////////////////////////////////////////////////////////////////////
 			if (!e.type.equal(BaseType.ERROR) && !e.type.equal(BaseType.BOOL)
 					&& !e.type.equal(BaseType.INT)
-					&& !e.type.equal(BaseType.STRING) && !e.type.equal(BaseType.DOUBLE)) 
-			{
+					&& !e.type.equal(BaseType.STRING)) {
 				issueError(new BadPrintArgError(e.getLocation(), Integer
 						.toString(i), e.type.toString()));
 			}
-/////////////////////////////////////////////////////////////////////////////////////////////////////
 		}
 	}
 
@@ -583,11 +542,6 @@ public class TypeCheck extends Tree.Visitor {
 		case Tree.BOOL:
 			type.type = BaseType.BOOL;
 			break;
-//////////////////////////////////////////////////////////////////////////////////////////////
-		case Tree.DOUBLE:
-			type.type = BaseType.DOUBLE;
-			break;
-//////////////////////////////////////////////////////////////////////////////////////////////			
 		default:
 			type.type = BaseType.STRING;
 		}
@@ -625,7 +579,7 @@ public class TypeCheck extends Tree.Visitor {
 	private Type checkBinaryOp(Tree.Expr left, Tree.Expr right, int op, Location location) {
 		left.accept(this);
 		right.accept(this);
-		
+
 		if (left.type.equal(BaseType.ERROR) || right.type.equal(BaseType.ERROR)) {
 			switch (op) {
 			case Tree.PLUS:
@@ -649,46 +603,33 @@ public class TypeCheck extends Tree.Visitor {
 		case Tree.DIV:
 			compatible = left.type.equals(BaseType.INT)
 					&& left.type.equal(right.type);
-			if (!compatible)
-				returnType = BaseType.ERROR;
-			else
-				returnType = left.type;
-			//System.out.println(left.getLocation() + " " + compatible + " " + left.type.toString() + " " + right.type.toString());
+			returnType = left.type;
 			break;
 		case Tree.GT:
 		case Tree.GE:
 		case Tree.LT:
 		case Tree.LE:
-			compatible = (left.type.equal(BaseType.INT) || left.type.equal(BaseType.DOUBLE)) && left.type.equal(right.type);
-			if (!compatible)
-				returnType = BaseType.ERROR;
-			else
-				returnType = BaseType.BOOL;
+			compatible = left.type.equal(BaseType.INT)
+					&& left.type.equal(right.type);
+			returnType = BaseType.BOOL;
 			break;
 		case Tree.MOD:
-			compatible = left.type.equal(BaseType.INT) && left.type.equal(right.type);
-			if (!compatible)
-				returnType = BaseType.ERROR;
-			else
-				returnType = BaseType.INT;
+			compatible = left.type.equal(BaseType.INT)
+					&& right.type.equal(BaseType.INT);
+			returnType = BaseType.INT;
 			break;
 		case Tree.EQ:
 		case Tree.NE:
-			compatible = left.type.compatible(right.type) || right.type.compatible(left.type);
-			if (!compatible)
-				returnType = BaseType.ERROR;
-			else
-				returnType = BaseType.BOOL;
+			compatible = left.type.compatible(right.type)
+					|| right.type.compatible(left.type);
+			returnType = BaseType.BOOL;
 			break;
 		case Tree.AND:
 		case Tree.OR:
-			compatible = left.type.equal(BaseType.BOOL) && left.type.equal(right.type);
-			if (!compatible)
-				returnType = BaseType.ERROR;
-			else
-				returnType = BaseType.BOOL;
+			compatible = left.type.equal(BaseType.BOOL)
+					&& right.type.equal(BaseType.BOOL);
+			returnType = BaseType.BOOL;
 			break;
-		// TO-DO: 为上面每个case添加代码
 		default:
 			break;
 		}

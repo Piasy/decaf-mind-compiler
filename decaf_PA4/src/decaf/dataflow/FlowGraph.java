@@ -173,21 +173,7 @@ public class FlowGraph implements Iterable<BasicBlock> {
 		for (BasicBlock bb : bbs) {
 			bb.computeDefAndLiveUse();
 		}
-		boolean changed = true;
-		do {
-			changed = false;
-			for (BasicBlock bb: bbs) {
-				for (int i = 0; i < 2; i++) {
-					bb.liveOut.addAll (bbs.get(bb.next[i]).liveIn);
-				}
-				bb.liveOut.removeAll(bb.def);
-				if (bb.liveIn.addAll (bb.liveOut))
-					changed = true;
-				for (int i = 0; i < 2; i++) {
-					bb.liveOut.addAll (bbs.get(bb.next[i]).liveIn);
-				}
-			}
-		} while (changed);
+		// TODO:
 	}
 
 	public void simplify() {
